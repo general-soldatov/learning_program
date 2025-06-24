@@ -26,13 +26,14 @@ class Parser(ABC):
         pass
 
 class ParseXls:
-    def __init__(self, path, name=None, max_row=False):
+    def __init__(self, path, name=None, max_RC: bool|tuple =False):
         self.workbook = openpyxl.load_workbook(path, read_only=True)
         self._worksheet(name)
         self.row_index = None
-        if self.sheet.max_row and not max_row:
+        if self.sheet.max_row and not max_RC:
             self.max_row = self.sheet.max_row
-        self.max_row = max_row
+            self.max_col = self.sheet.max_column
+        self.max_row, self.max_col = max_RC
 
     def _worksheet(self, name):
         self.sheet = self.workbook.active
