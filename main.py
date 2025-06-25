@@ -27,7 +27,20 @@ url = "https://znanium.ru/catalog/document?id=426496"
 # print(data._data)
 path = "C:/Users/Юрий Солдатов/YandexDisk/ИБИС/3-ИТ-09.03.02_24_00.xlsx"
 shedule = ParseShedule(path, name='План')
-shedule.search_code('Б1.В.07')
+shedule.search_code('Б1.О.26') #'Б1.В.07')
 # print(shedule.row_index)
-shedule.search_semester()
-print(shedule.data_course)
+# shedule.search_semester()
+# print(shedule.data_course)
+
+
+def part_one():
+    shedule.search_competition()
+    print(shedule.abstract_of_competition)
+
+def part_two():
+    shedule.search_semester()
+    shedule.data_course # расчасовка по семестрам
+
+if __name__ == '__main__':
+    part_one()
+    # part_two()

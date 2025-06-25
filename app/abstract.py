@@ -40,9 +40,15 @@ class ParseXls:
         if name:
             self.sheet = self.workbook[name]
 
-    def _search_to_column(self, to_scan: str, col: int) -> int:
-        for row in range(1, self.max_row + 1):
+    def _search_to_column(self, to_scan: str, col: int, start: int = 1) -> int:
+        for row in range(start, self.max_row + 1):
             if self.sheet.cell(row, col).value == to_scan:
+                return row
+
+    @staticmethod
+    def _search_with_column(sheet, to_scan: str, col: int, start: int = 1, stop: int = 1) -> int:
+        for row in range(start, stop + 1):
+            if sheet.cell(row, col).value == to_scan:
                 return row
 
 
