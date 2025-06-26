@@ -1,4 +1,19 @@
 from .abstract import Parser, ParseXls, YamlCreator
+from .config import Paths, Program, Themes, Literatures
+
+class ProjectReader(YamlCreator):
+    def __init__(self, path, encoding = 'utf-8'):
+        super().__init__(path, encoding)
+        self.import_paths()
+
+    def import_paths(self):
+        self.paths: Paths = Paths(**self._data['path'])
+        self.program: Program = Program(**self._data['program'])
+
+    def import_data(self):
+        self.themes: Themes = Themes(**self._data['themes'])
+        self.literatures: Literatures = Literatures(**self._data['literatures'])
+
 
 class BookParser(Parser):
     def __init__(self, url):
@@ -33,6 +48,7 @@ class ParseShedule(ParseXls):
 
     def search_code(self, code: str):
         self.row_index = self._search_to_column(code, col=2)
+        self.name = self.sheet.cell(self.row_index, column=3).value
 
     @staticmethod
     def num_semester(course: str, session: str) -> int:

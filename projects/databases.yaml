@@ -1,6 +1,16 @@
+path:
+  shedule:
+    C:/Users/Юрий Солдатов/YandexDisk/ИБИС/3-ИТ-09.03.02_24_00.xlsx
+  work_program:
+    "C:/Users/Юрий Солдатов/YandexDisk/ИБИС/WP_Template.docx"
+  appraisal_funds:
+    str
+  metodical:
+    str
+  folder:
+    "C:/Users/Юрий Солдатов/YandexDisk/ИБИС"
 program:
   code: 'Б1.В.07'
-  name: 'Современные системы управления базами данных'
   target: 'получить навыки использования баз данных и СУБД при решении практических задач.'
   tasks:
     - изучить основные понятия и теоретические основы дисциплины;
@@ -22,8 +32,12 @@ program:
       - Web-программирование в информационных сисх
       - Автоматизация проектирования информационных систем
 
+  competition:
+    - о способах выполнения работы по созданию (модификации) и сопровождению информационных систем и ресурсов для различных прикладных областей
+
+
 themes:
-  list:
+  list_of:
     - Системы баз данных. Обзор современных систем управления базами данных
     - Язык SQL
     - Программное обеспечение для работы с современными базами данных
@@ -34,19 +48,14 @@ themes:
     - Подготовка печатных документов на основе базы данных
     - Физическая организация базы данных
     - Выбор СУБД. Перспективы развития СУБД
-  semester:
-    division: 4
-
+  semester_division: 4
 
 literatures:
   basic:
     - https://znanium.ru/catalog/product/1066784
     - https://znanium.com/catalog/product/548234
-  additional:
+  optional:
     - https://znanium.ru/catalog/product/1830834
     - https://znanium.ru/catalog/product/1912454
     - https://znanium.ru/catalog/product/2169626
     - https://znanium.ru/catalog/product/421942
-
-competition:
-  - о способах выполнения работы по созданию (модификации) и сопровождению информационных систем и ресурсов для различных прикладных областей

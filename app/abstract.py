@@ -1,8 +1,12 @@
 import openpyxl
+import os
 import requests
 import yaml
+import jinja2
+from docxtpl import DocxTemplate
 from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
+from .config import Program
 
 class Parser(ABC):
     def __init__(self, url=None):
@@ -63,3 +67,37 @@ class YamlCreator:
             path = self._path
         with open(path, 'w', encoding=encoding) as project:
             yaml.dump(self._data, project)
+
+
+class WordDocument:
+    def __init__(self, data: Program, path_doc: str = None, path: str = ""):
+        self.doc: DocxTemplate = DocxTemplate(path_doc)
+        self.data: Program = data
+        self.type_doc: str = "NoneType"
+        self.name_file = ""
+        self.path_doc = path_doc
+        self.jinja_env = jinja2.Environment()
+        self.context = {**data.__dict__, 'name': 'NoName'}
+        self.path = path
+
+    def create_dir(self):
+        self.path_dir = self.path + f"/{self.data.code} {self.context['name']}"
+        os.makedirs(self.path_dir, exist_ok=True)
+
+    def create_name(self):
+        self.create_dir()
+        self.name_file = f"{self.path_dir}/{self.type_doc} {self.data.code}.docx"
+
+    def create_document(self) -> str | Exception:
+        self.create_name()
+        return self.__document_create(self.doc, self.name_file, self.context, self.jinja_env)
+
+
+    @staticmethod
+    def __document_create(docs: DocxTemplate, name_file: str, context: dict, jinja_env: jinja2.Environment) -> str | Exception:
+        try:
+            docs.render(context, jinja_env)
+            docs.save(name_file)
+            return name_file
+        except Exception as e:
+            return e

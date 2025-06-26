@@ -1,5 +1,6 @@
 from bs4 import BeautifulSoup
 import requests
+import os
 
 # url = "https://znanium.ru/catalog/document?id=426496"
 
@@ -10,37 +11,23 @@ import requests
 
 # print(bibl_data[0].text)
 
-from app.books import BookParser, YamlCreator, ParseShedule
-from app.data_parser import *
+from app.parser import BookParser, ProjectReader, ParseShedule
+from app.word_template import WorkPlan
 
-url = "https://znanium.ru/catalog/document?id=426496"
-# data = BookParser(url)
-
-# data = MDParser(path_md='projects/databases.md')
-
-# print(data.find_data())
-# for item in data.find_data():
-#     print(item.text)
-# print(data.page)
-
-# data = YamlCreator('projects/databases.yaml')
-# print(data._data)
-path = "C:/Users/Юрий Солдатов/YandexDisk/ИБИС/3-ИТ-09.03.02_24_00.xlsx"
-shedule = ParseShedule(path, name='План')
-shedule.search_code('Б1.О.26') #'Б1.В.07')
-# print(shedule.row_index)
-# shedule.search_semester()
-# print(shedule.data_course)
-
+data_yaml = ProjectReader('projects/databases.yaml')
+shedule = ParseShedule(data_yaml.paths.shedule, name='План')
+shedule.search_code(data_yaml.program.code)
+data_yaml.import_data()
+data_yaml.program.name = shedule.name
 
 def part_one():
     shedule.search_competition()
     print(shedule.abstract_of_competition)
 
 def part_two():
-    shedule.search_semester()
-    shedule.data_course # расчасовка по семестрам
+    wp = WorkPlan(data_yaml.program, path_doc=data_yaml.paths.work_program, path=data_yaml.paths.folder)
+    print(wp.create_document())
 
 if __name__ == '__main__':
     part_one()
-    # part_two()
+    part_two()
