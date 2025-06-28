@@ -15,7 +15,8 @@ class Program:
     target: str
     tasks: List[str]
     place_of_learning: Dict[str, Dict[str, str]]
-    competition: str
+    competition: List[str]
+    type_: str
 
 @dataclass
 class Themes:

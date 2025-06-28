@@ -4,6 +4,7 @@ import requests
 import yaml
 import jinja2
 from docxtpl import DocxTemplate
+from progress.bar import IncrementalBar
 from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
 from .config import Program
@@ -70,8 +71,11 @@ class YamlCreator:
 
 
 class WordDocument:
-    def __init__(self, data: Program, path_doc: str = None, path: str = ""):
+    def __init__(self, data: Program, path_doc: str = None, path: str = "", _bar_max=5):
+        self.bar = IncrementalBar("Create Word document", max = _bar_max, suffix='%(percent)d%%')
+        self.bar.next()
         self.doc: DocxTemplate = DocxTemplate(path_doc)
+        self.bar.next()
         self.data: Program = data
         self.type_doc: str = "NoneType"
         self.name_file = ""
@@ -83,14 +87,18 @@ class WordDocument:
     def create_dir(self):
         self.path_dir = self.path + f"/{self.data.code} {self.context['name']}"
         os.makedirs(self.path_dir, exist_ok=True)
+        self.bar.next()
 
     def create_name(self):
         self.create_dir()
         self.name_file = f"{self.path_dir}/{self.type_doc} {self.data.code}.docx"
+        self.bar.next()
 
     def create_document(self) -> str | Exception:
         self.create_name()
-        return self.__document_create(self.doc, self.name_file, self.context, self.jinja_env)
+        info = self.__document_create(self.doc, self.name_file, self.context, self.jinja_env)
+        self.bar.finish()
+        return f"Word document has been created and placed on the path\n{info}"
 
 
     @staticmethod

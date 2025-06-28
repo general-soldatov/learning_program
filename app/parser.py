@@ -1,3 +1,4 @@
+import re
 from .abstract import Parser, ParseXls, YamlCreator
 from .config import Paths, Program, Themes, Literatures
 
@@ -20,8 +21,17 @@ class BookParser(Parser):
         super().__init__(url)
         self.attr = {'name': 'pan', 'id': "doc-biblio-card"}
 
+    @staticmethod
+    def clean_text(text: str):
+        pattern = r' \(дата обращения:\s*\d{2}\.\d{2}\.\d{4}\)'
+        return re.sub(pattern, '', text)
+
     def find_data(self, *args, **kwargs):
-        return self._find_data().text.strip()
+        try:
+            data: str = self._find_data().text.strip()
+            return self.clean_text(data)
+        except Exception as e:
+            print(f"{self.url} не поддерживается!\n{e}")
 
 # class MDParser(Parser):
 #     def __init__(self, url=None, path_md=None, test='ABCD'):
