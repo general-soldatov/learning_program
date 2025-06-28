@@ -26,8 +26,9 @@ def part_one():
 
 def part_two():
     wp = WorkPlan(data_yaml.program, path_doc=data_yaml.paths.work_program, path=data_yaml.paths.folder)
+    wp.add_with_project(data_yaml.themes, data_yaml.literatures)
     print(wp.create_document())
 
 if __name__ == '__main__':
-    part_one()
+    # part_one()
     part_two()

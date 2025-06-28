@@ -59,11 +59,6 @@ class ParseShedule(ParseXls):
         return 2 * int(course[-1]) + sessions[session]
 
     @staticmethod
-    def roman_digit(num: int):
-        semesters = ['0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII']
-        return semesters[num]
-
-    @staticmethod
     def type_control(data: dict) -> None:
         control = {
             'з': 'Зачёт',
