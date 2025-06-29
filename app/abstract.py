@@ -9,12 +9,14 @@ from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
 from .config import Program
 
-def create_division(message: str) -> str:
+def create_division(message: str = None, division: str = '#') -> str:
     columns = os.get_terminal_size().columns
-    padding_length = columns - len(message) - 2
-    left_padding = '#' * (padding_length // 2)
-    right_padding = '#' * ((padding_length + 1) // 2)
-    return f"{left_padding} {message} {right_padding}"
+    if message:
+        padding_length = columns - len(message) - 2
+        left_padding = division * (padding_length // 2)
+        right_padding = division * ((padding_length + 1) // 2)
+        return f"{left_padding} {message} {right_padding}"
+    return division * columns
 
 class Parser(ABC):
     def __init__(self, url=None):

@@ -1,43 +1,60 @@
-from bs4 import BeautifulSoup
-import requests
+import click
+from typing import Tuple
 from app.abstract import create_division
-
-from app.parser import BookParser, ProjectReader, ParseShedule
+from app.parser import  ProjectReader, ParseShedule
 from app.word_template import WorkPlan, AppraisalFunds, Metodical
 
-data_prog = {
+@click.group()
+def cli():
+    pass
+
+DATA_PROG = {
     'start': 'start program'.upper(),
     'end': 'end program'.upper()
 }
-print(create_division(data_prog['start']))
-data_yaml = ProjectReader('projects/databases.yaml')
-print('Open Exel File')
-shedule = ParseShedule(data_yaml.paths.shedule, name='План')
-shedule.search_code(data_yaml.program.code)
-data_yaml.import_data()
 
-def part_one():
+def start(path: str) -> Tuple[ProjectReader, ParseShedule]:
+    click.echo(create_division(DATA_PROG['start']))
+    data_yaml = ProjectReader(path)
+    click.echo(create_division('Open Exel File'.upper(), '*'))
+    shedule = ParseShedule(data_yaml.paths.shedule, name='План')
+    shedule.search_code(data_yaml.program.code)
+    data_yaml.import_data()
+    return data_yaml, shedule
+
+@cli.command("preview")
+@click.option("--path", prompt="Path", default='projects/databases.yaml')
+def prewiew(path):
+    _, shedule = start(path)
     shedule.search_competition()
-    print("Selected competition:")
-    print(shedule.abstract_of_competition)
+    click.echo(create_division("Selected competition:".upper(), '*'))
+    for key, value in shedule.abstract_of_competition.items():
+        click.echo(key)
+        click.echo(create_division(division='-'))
+        click.echo(value['text'])
+    click.echo(create_division(DATA_PROG['end']))
 
-def part_two():
-    # print("Create document: Work Plan")
-    # wp = WorkPlan(data_yaml.program, path_doc=data_yaml.paths.work_program, path=data_yaml.paths.folder)
-    # wp.add_with_project(data_yaml.themes, data_yaml.literatures, data_yaml.program, shedule)
-    # print(wp.create_document())
-    # print("Create document: Appraisal Funds")
-    # af = AppraisalFunds(data_yaml.program, path_doc=data_yaml.paths.appraisal_funds, path=data_yaml.paths.folder)
-    # af.add_with_project(data_yaml.program, shedule)
-    # print(af.create_document())
-    print("Create document: Metodical")
-    mw = Metodical(data_yaml.program, path_doc=data_yaml.paths.metodical, path=data_yaml.paths.folder)
-    mw.add_with_project(data_yaml.themes, data_yaml.literatures, data_yaml.program, shedule)
-    print(mw.create_document())
+@cli.command("project")
+@click.option("--path", prompt="Path", default='projects/databases.yaml')
+def project(path):
+    data_yaml, shedule = start(path)
+    if click.confirm(f"Do you really want to create a project {path}"):
+        click.echo("Create document: Work Plan")
+        wp = WorkPlan(data_yaml.program, path_doc=data_yaml.paths.work_program, path=data_yaml.paths.folder)
+        wp.add_with_project(data_yaml.themes, data_yaml.literatures, data_yaml.program, shedule)
+        click.echo(wp.create_document())
+        click.echo("Create document: Appraisal Funds")
+        af = AppraisalFunds(data_yaml.program, path_doc=data_yaml.paths.appraisal_funds, path=data_yaml.paths.folder)
+        af.add_with_project(data_yaml.program, shedule)
+        click.echo(af.create_document())
+        click.echo("Create document: Metodical")
+        mw = Metodical(data_yaml.program, path_doc=data_yaml.paths.metodical, path=data_yaml.paths.folder)
+        mw.add_with_project(data_yaml.themes, data_yaml.literatures, data_yaml.program, shedule)
+        click.echo(mw.create_document())
+    else:
+        click.echo("Aborted!")
+    click.echo(create_division(DATA_PROG['end']))
+
 
 if __name__ == '__main__':
-    # part_one()
-    part_two()
-    print(create_division(data_prog['end']))
-    # print(data_yaml.literatures.basic[0]+'#bib')
-    # print(BookParser(data_yaml.literatures.basic[0]).find_data())
+    cli()

@@ -1,10 +1,16 @@
-import os
+import click
 
-def create_division(message: str) -> str:
-    columns = os.get_terminal_size().columns
-    padding_length = columns - len(message) - 2
-    left_padding = '#' * (padding_length // 2)
-    right_padding = '#' * ((padding_length + 1) // 2)
-    return f"{left_padding} {message} {right_padding}"
+@click.group()
+def cli():
+    pass
 
-print(create_division('END PROGRAM'))
+@cli.command("comp")
+def comp():
+    print('comp')
+
+@cli.command("project")
+def project():
+    print('project')
+
+if __name__ == '__main__':
+    cli()
