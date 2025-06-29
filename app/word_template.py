@@ -101,7 +101,7 @@ class WordWorkRendering(WordDocument):
 class WorkPlan(WordWorkRendering):
     def __init__(self, data, path_doc=None, path=""):
         super().__init__(data, path_doc, path, _bar_max=10)
-        self.type_doc = "МР"
+        self.type_doc = "РП"
 
     def add_with_project(self, themes, liter, program, shedule):
         return super().add_with_project(themes, liter, program, shedule)

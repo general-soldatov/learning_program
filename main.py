@@ -13,6 +13,8 @@ DATA_PROG = {
     'end': 'end program'.upper()
 }
 
+TEMPLATE = 'C:/Users/Юрий Солдатов/PycharmProjects/learning_program/projects/template.yaml'
+
 def start(path: str) -> Tuple[ProjectReader, ParseShedule]:
     click.echo(create_division(DATA_PROG['start']))
     data_yaml = ProjectReader(path)
@@ -22,22 +24,22 @@ def start(path: str) -> Tuple[ProjectReader, ParseShedule]:
     data_yaml.import_data()
     return data_yaml, shedule
 
-@cli.command("create")
+@cli.command("create", help="Copy template of project to locale directory")
 @click.option("--path", prompt="Path", default='')
 @click.option("--name", prompt="Path", default='project')
 def copy_template(path, name):
     click.echo(create_division(DATA_PROG['start']))
     click.echo(create_division('Create project'.upper(), '*'))
     project_name = f"{path}{'/' if path != '' else ''}{name}.yaml"
-    data_yaml = ProjectReader('projects/template.yaml')
+    data_yaml = ProjectReader(TEMPLATE)
     if click.confirm(f"Do you really want to create a project {project_name}"):
         data_yaml.recording(project_name)
     else:
         click.echo("Aborted!")
     click.echo(create_division(DATA_PROG['end']))
 
-@cli.command("preview")
-@click.option("--path", prompt="Path", default='projects/template.yaml')
+@cli.command("preview", help="Preview the project")
+@click.option("--path", prompt="Path", default=TEMPLATE)
 def prewiew(path):
     _, shedule = start(path)
     shedule.search_competition()
@@ -51,8 +53,8 @@ def prewiew(path):
         click.echo(value['text'])
     click.echo(create_division(DATA_PROG['end']))
 
-@cli.command("project")
-@click.option("--path", prompt="Path", default='projects/template.yaml')
+@cli.command("project", help="Build the project")
+@click.option("--path", prompt="Path", default=TEMPLATE)
 def project(path):
     data_yaml, shedule = start(path)
     if click.confirm(f"Do you really want to create a project {path}"):
