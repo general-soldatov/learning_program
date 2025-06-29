@@ -83,11 +83,12 @@ class YamlCreator:
         if not path:
             path = self._path
         self.bar.next()
-        with open(path, 'w', encoding=encoding) as project:
-            yaml.dump(self._data, project)
-            self.bar.next()
-            self.bar.finish()
-
+        try:
+            with open(path, 'w', encoding=encoding) as project:
+                yaml.dump(self._data, project, encoding=encoding, allow_unicode=True)
+                self.bar.next()
+        except Exception as e:
+            print('\n', e)
 
 class WordDocument:
     def __init__(self, data: Program, path_doc: str = None, path: str = "", _bar_max=5):

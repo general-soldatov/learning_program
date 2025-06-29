@@ -22,20 +22,37 @@ def start(path: str) -> Tuple[ProjectReader, ParseShedule]:
     data_yaml.import_data()
     return data_yaml, shedule
 
+@cli.command("create")
+@click.option("--path", prompt="Path", default='')
+@click.option("--name", prompt="Path", default='project')
+def copy_template(path, name):
+    click.echo(create_division(DATA_PROG['start']))
+    click.echo(create_division('Create project'.upper(), '*'))
+    project_name = f"{path}{'/' if path != '' else ''}{name}.yaml"
+    data_yaml = ProjectReader('projects/template.yaml')
+    if click.confirm(f"Do you really want to create a project {project_name}"):
+        data_yaml.recording(project_name)
+    else:
+        click.echo("Aborted!")
+    click.echo(create_division(DATA_PROG['end']))
+
 @cli.command("preview")
-@click.option("--path", prompt="Path", default='projects/databases.yaml')
+@click.option("--path", prompt="Path", default='projects/template.yaml')
 def prewiew(path):
     _, shedule = start(path)
     shedule.search_competition()
-    click.echo(create_division("Selected competition:".upper(), '*'))
+    shedule.search_semester()
+    semesters = ', '.join(map(str, shedule.data_course.keys()))
+    click.echo(create_division("Data of discipline:".upper(), '*'))
+    click.echo(f'Discipline: "{shedule.name}"\nSemesters: {semesters}')
+    click.echo('Selected competition:')
     for key, value in shedule.abstract_of_competition.items():
-        click.echo(key)
-        click.echo(create_division(division='-'))
+        click.echo(create_division(key, division='>'))
         click.echo(value['text'])
     click.echo(create_division(DATA_PROG['end']))
 
 @cli.command("project")
-@click.option("--path", prompt="Path", default='projects/databases.yaml')
+@click.option("--path", prompt="Path", default='projects/template.yaml')
 def project(path):
     data_yaml, shedule = start(path)
     if click.confirm(f"Do you really want to create a project {path}"):

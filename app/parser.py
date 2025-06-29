@@ -4,11 +4,12 @@ from .config import Paths, Program, Themes, Literatures
 
 class ProjectReader(YamlCreator):
     def __init__(self, path, encoding = 'utf-8'):
-        super().__init__(path, encoding, _bar_max = 4)
+        super().__init__(path, encoding, _bar_max = 5)
         self.import_paths()
 
     def import_paths(self):
         self.paths: Paths = Paths(**self._data['path'])
+        self.bar.next()
         self.program: Program = Program(**self._data['program'])
         self.bar.next()
         self.bar.finish()
