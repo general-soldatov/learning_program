@@ -4,12 +4,14 @@ from .config import Paths, Program, Themes, Literatures
 
 class ProjectReader(YamlCreator):
     def __init__(self, path, encoding = 'utf-8'):
-        super().__init__(path, encoding)
+        super().__init__(path, encoding, _bar_max = 4)
         self.import_paths()
 
     def import_paths(self):
         self.paths: Paths = Paths(**self._data['path'])
         self.program: Program = Program(**self._data['program'])
+        self.bar.next()
+        self.bar.finish()
 
     def import_data(self):
         self.themes: Themes = Themes(**self._data['themes'])
@@ -53,12 +55,14 @@ class BookParser(Parser):
 
 class ParseShedule(ParseXls):
     def __init__(self, path, name=None, max_RC = (74, 103)):
-        super().__init__(path, name, max_RC)
+        super().__init__(path, name, max_RC, _bar_max=3)
 
 
     def search_code(self, code: str):
         self.row_index = self._search_to_column(code, col=2)
         self.name = self.sheet.cell(self.row_index, column=3).value
+        self.bar.next()
+        self.bar.finish()
 
     @staticmethod
     def num_semester(course: str, session: str) -> int:

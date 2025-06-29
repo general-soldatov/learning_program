@@ -2,11 +2,10 @@ from .abstract import WordDocument
 from .parser import ParseShedule, BookParser
 from .config import Themes, Literatures, Program
 
-class WorkPlan(WordDocument):
+class WordWorkRendering(WordDocument):
     def __init__(self, data, path_doc = None, path = "", _bar_max=10):
         super().__init__(data, path_doc, path, _bar_max=_bar_max)
         self.type_doc = 'РП'
-
 
     @staticmethod
     def roman_digit(num: int):
@@ -17,7 +16,7 @@ class WorkPlan(WordDocument):
     def volume_create(volume_last: dict) -> list:
         volume = []
         for semester, value in volume_last.items():
-            data_volume = {'semester': WorkPlan.roman_digit(semester)}
+            data_volume = {'semester': WordWorkRendering.roman_digit(semester)}
             data_volume.update(value)
             data_volume['contact'] = data_volume['Лек'] + data_volume['Лаб'] + data_volume['Пр']
             volume.append(data_volume)
@@ -99,8 +98,15 @@ class WorkPlan(WordDocument):
         self.create_app_fund(program)
         self.create_plan(themes, program, liter)
 
+class WorkPlan(WordWorkRendering):
+    def __init__(self, data, path_doc=None, path=""):
+        super().__init__(data, path_doc, path, _bar_max=10)
+        self.type_doc = "МР"
 
-class AppraisalFunds(WorkPlan):
+    def add_with_project(self, themes, liter, program, shedule):
+        return super().add_with_project(themes, liter, program, shedule)
+
+class AppraisalFunds(WordWorkRendering):
     def __init__(self, data, path_doc=None, path=""):
         super().__init__(data, path_doc, path, _bar_max=6)
         self.type_doc = "ФОС"
@@ -108,3 +114,11 @@ class AppraisalFunds(WorkPlan):
     def add_with_project(self, program, shedule):
         self.parse_semester(shedule)
         self.create_app_fund(program)
+
+class Metodical(WordWorkRendering):
+    def __init__(self, data, path_doc=None, path=""):
+        super().__init__(data, path_doc, path, _bar_max=10)
+        self.type_doc = "МР"
+
+    def add_with_project(self, themes, liter, program, shedule):
+        return super().add_with_project(themes, liter, program, shedule)

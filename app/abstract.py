@@ -9,6 +9,13 @@ from abc import ABC, abstractmethod
 from bs4 import BeautifulSoup
 from .config import Program
 
+def create_division(message: str) -> str:
+    columns = os.get_terminal_size().columns
+    padding_length = columns - len(message) - 2
+    left_padding = '#' * (padding_length // 2)
+    right_padding = '#' * ((padding_length + 1) // 2)
+    return f"{left_padding} {message} {right_padding}"
+
 class Parser(ABC):
     def __init__(self, url=None):
         self.__get_url(url)
@@ -31,14 +38,17 @@ class Parser(ABC):
         pass
 
 class ParseXls:
-    def __init__(self, path, name=None, max_RC: bool|tuple =False):
+    def __init__(self, path, name=None, max_RC: bool|tuple = False, _bar_max=5):
+        self.bar = IncrementalBar("Load Data with Exel", max = _bar_max, suffix='%(percent)d%%')
         self.workbook = openpyxl.load_workbook(path, read_only=True)
+        self.bar.next()
         self._worksheet(name)
         self.row_index = None
         if self.sheet.max_row and not max_RC:
             self.max_row = self.sheet.max_row
             self.max_col = self.sheet.max_column
         self.max_row, self.max_col = max_RC
+        self.bar.next()
 
     def _worksheet(self, name):
         self.sheet = self.workbook.active
@@ -58,16 +68,23 @@ class ParseXls:
 
 
 class YamlCreator:
-    def __init__(self, path: str, encoding: str = 'utf-8'):
+    def __init__(self, path: str, encoding: str = 'utf-8', _bar_max=5):
+        self.bar = IncrementalBar("Loading Project", max = _bar_max, suffix='%(percent)d%%')
+        self.bar.next()
         self._path = path
         with open(path, 'r', encoding=encoding) as project:
+            self.bar.next()
             self._data = yaml.safe_load(project)
+            self.bar.next()
 
     def recording(self, path: str = None, encoding: str = 'utf-8'):
         if not path:
             path = self._path
+        self.bar.next()
         with open(path, 'w', encoding=encoding) as project:
             yaml.dump(self._data, project)
+            self.bar.next()
+            self.bar.finish()
 
 
 class WordDocument:
