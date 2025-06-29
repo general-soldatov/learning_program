@@ -4,7 +4,7 @@ path:
   work_program:
     "C:/Users/Юрий Солдатов/YandexDisk/ИБИС/WP_Template.docx"
   appraisal_funds:
-    str
+    "C:/Users/Юрий Солдатов/YandexDisk/ИБИС/Appraisal_Funds_Template.docx"
   metodical:
     str
   folder:

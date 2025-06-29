@@ -91,7 +91,7 @@ class WordDocument:
 
     def create_name(self):
         self.create_dir()
-        self.name_file = f"{self.path_dir}/{self.type_doc} {self.data.code}.docx"
+        self.name_file = f"{self.path_dir}/{self.type_doc} {self.data.code} {self.context['name']}.docx"
         self.bar.next()
 
     def create_document(self) -> str | Exception:
