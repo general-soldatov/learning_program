@@ -73,7 +73,7 @@ class WordWorkRendering(WordDocument):
         self.context['tasks_type'] = program.type_
         self.context['benchmark'] = {key: program.competition[i] for i, key
                                      in enumerate(self.context['competition'].keys())}
-        self.context['num_comp'] = ','.join(self.context['competition'].keys())
+        self.context['num_comp'] = ', '.join(self.context['competition'].keys())
         self.context['control'] = ', '.join(item['Формы контр.'] for _, item in self.volume_last.items())
         self.bar.next()
 

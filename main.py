@@ -26,7 +26,7 @@ def start(path: str) -> Tuple[ProjectReader, ParseShedule]:
 
 @cli.command("create", help="Copy template of project to locale directory")
 @click.option("--path", prompt="Path", default='')
-@click.option("--name", prompt="Path", default='project')
+@click.option("--name", prompt="Name", default='project')
 def copy_template(path, name):
     click.echo(create_division(DATA_PROG['start']))
     click.echo(create_division('Create project'.upper(), '*'))
@@ -51,13 +51,13 @@ def prewiew(path):
     for key, value in shedule.abstract_of_competition.items():
         click.echo(create_division(key, division='>'))
         click.echo(value['text'])
-    click.echo(create_division(DATA_PROG['end']))
+    click.echo('\n' + create_division(DATA_PROG['end']))
 
 @cli.command("project", help="Build the project")
 @click.option("--path", prompt="Path", default=TEMPLATE)
 def project(path):
     data_yaml, shedule = start(path)
-    if click.confirm(f"Do you really want to create a project {path}"):
+    if click.confirm(f"Do you really want to complile the project {path}"):
         click.echo("Create document: Work Plan")
         wp = WorkPlan(data_yaml.program, path_doc=data_yaml.paths.work_program, path=data_yaml.paths.folder)
         wp.add_with_project(data_yaml.themes, data_yaml.literatures, data_yaml.program, shedule)
