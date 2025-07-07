@@ -36,7 +36,7 @@ def copy_template(path, name):
         data_yaml.recording(project_name)
     else:
         click.echo("Aborted!")
-    click.echo(create_division(DATA_PROG['end']))
+    click.echo('\n' + create_division(DATA_PROG['end']))
 
 @cli.command("preview", help="Preview the project")
 @click.option("--path", prompt="Path", default=TEMPLATE)
@@ -72,7 +72,7 @@ def project(path):
         click.echo(mw.create_document())
     else:
         click.echo("Aborted!")
-    click.echo(create_division(DATA_PROG['end']))
+    click.echo('\n' + create_division(DATA_PROG['end']))
 
 
 if __name__ == '__main__':

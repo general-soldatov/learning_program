@@ -34,7 +34,7 @@ class BookParser(Parser):
             data: str = self._find_data().text.strip()
             return self.clean_text(data)
         except Exception as e:
-            print(f"{self.url} не поддерживается!\n{e}")
+            print(f"\n{self.url} не поддерживается!\n{e}")
 
 # class MDParser(Parser):
 #     def __init__(self, url=None, path_md=None, test='ABCD'):

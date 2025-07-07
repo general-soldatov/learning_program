@@ -22,7 +22,7 @@ class WordWorkRendering(WordDocument):
             volume.append(data_volume)
 
         if len(volume) < 2:
-            volume.append({key: 0 for key, _ in volume[0]})
+            volume.append({key: 0 for key, _ in volume[0].items()})
 
         data = {}
         for elem in volume:
@@ -52,7 +52,7 @@ class WordWorkRendering(WordDocument):
             volume_last[keys[1]]['themes'] = {i+1: themes_[1][i-division] for i in range(division, len(themes))}
             return volume_last
 
-        volume_last[keys[0]]['themes'] = {i: themes[i] for i in range(1, len(themes)+1)}
+        volume_last[keys[0]]['themes'] = {i: themes[i-1] for i in range(1, len(themes)+1)}
         return volume_last
 
     @staticmethod
