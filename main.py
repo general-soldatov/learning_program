@@ -1,4 +1,5 @@
 import click
+import shutil
 from typing import Tuple
 from app.abstract import create_division
 from app.parser import  ProjectReader, ParseShedule
@@ -31,9 +32,10 @@ def copy_template(path, name):
     click.echo(create_division(DATA_PROG['start']))
     click.echo(create_division('Create project'.upper(), '*'))
     project_name = f"{path}{'/' if path != '' else ''}{name}.yaml"
-    data_yaml = ProjectReader(TEMPLATE)
+    # data_yaml = ProjectReader(TEMPLATE)
     if click.confirm(f"Do you really want to create a project {project_name}"):
-        data_yaml.recording(project_name)
+        # data_yaml.recording(project_name)
+        shutil.copy(TEMPLATE, project_name)
     else:
         click.echo("Aborted!")
     click.echo('\n' + create_division(DATA_PROG['end']))
