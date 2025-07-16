@@ -2,6 +2,7 @@ import click
 import shutil
 from typing import Tuple
 from app.abstract import create_division
+from app.ai import AIPrompter
 from app.parser import  ProjectReader, ParseShedule
 from app.word_template import WorkPlan, AppraisalFunds, Metodical
 
@@ -42,8 +43,8 @@ def copy_template(path, name):
 
 @cli.command("preview", help="Preview the project")
 @click.option("--path", prompt="Path", default=TEMPLATE)
-def prewiew(path):
-    _, shedule = start(path)
+def preview(path):
+    data_yaml, shedule = start(path)
     shedule.search_competition()
     shedule.search_semester()
     semesters = ', '.join(map(str, shedule.data_course.keys()))
@@ -53,6 +54,9 @@ def prewiew(path):
     for key, value in shedule.abstract_of_competition.items():
         click.echo(create_division(key, division='>'))
         click.echo(value['text'])
+    ai = AIPrompter(data_yaml, shedule)
+    click.echo('\n' + create_division('EXPORT PROMPTS TO LLM', '>'))
+    ai.export_prompt()
     click.echo('\n' + create_division(DATA_PROG['end']))
 
 @cli.command("project", help="Build the project")
