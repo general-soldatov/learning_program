@@ -124,5 +124,5 @@ class Metodical(WordWorkRendering):
     def add_with_project(self, data_yaml: ProjectReader, shedule: ParseShedule):
         super().add_with_project(data_yaml, shedule)
         ai = AITester(data_yaml)
-        self.context.update(ai.build())
+        self.context['test_data'] = ai.build()
         self.bar.next()
