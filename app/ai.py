@@ -94,5 +94,5 @@ class AITester:
                 'question': self.get_question(item),
                 'test': self.get_test(item),
                 'discussion': self.get_discussion(item)
-                } for item in range(1, self.themes)
+                } for item in range(1, self.themes + 1)
             }
