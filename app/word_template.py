@@ -1,6 +1,7 @@
 from .abstract import WordDocument
-from .parser import ParseShedule, BookParser
+from .parser import ParseShedule, BookParser, ProjectReader
 from .config import Themes, Literatures, Program
+from .ai import AITester
 
 class WordWorkRendering(WordDocument):
     def __init__(self, data, path_doc = None, path = "", _bar_max=10):
@@ -89,36 +90,39 @@ class WordWorkRendering(WordDocument):
         self.context['zet'] = int(self.context['hours'] / 36)
         self.bar.next()
 
-    def add_with_project(self, themes: Themes, liter: Literatures, program: Program, shedule: ParseShedule):
-        context = {'themes': themes.list_of}
+    def add_with_project(self, data_yaml: ProjectReader, shedule: ParseShedule):
+        context = {'themes': data_yaml.themes.list_of}
         self.bar.next()
         self.context.update(context)
         self.bar.next()
         self.parse_semester(shedule)
-        self.create_app_fund(program)
-        self.create_plan(themes, program, liter)
+        self.create_app_fund(data_yaml.program)
+        self.create_plan(data_yaml.themes, data_yaml.program, data_yaml.literatures)
 
 class WorkPlan(WordWorkRendering):
     def __init__(self, data, path_doc=None, path=""):
         super().__init__(data, path_doc, path, _bar_max=10)
         self.type_doc = "РП"
 
-    def add_with_project(self, themes, liter, program, shedule):
-        return super().add_with_project(themes, liter, program, shedule)
+    def add_with_project(self, data_yaml: ProjectReader, shedule: ParseShedule):
+        return super().add_with_project(data_yaml, shedule)
 
 class AppraisalFunds(WordWorkRendering):
     def __init__(self, data, path_doc=None, path=""):
         super().__init__(data, path_doc, path, _bar_max=6)
         self.type_doc = "ФОС"
 
-    def add_with_project(self, program, shedule):
+    def add_with_project(self, data_yaml: ProjectReader, shedule: ParseShedule):
         self.parse_semester(shedule)
-        self.create_app_fund(program)
+        self.create_app_fund(data_yaml.program)
 
 class Metodical(WordWorkRendering):
     def __init__(self, data, path_doc=None, path=""):
         super().__init__(data, path_doc, path, _bar_max=10)
         self.type_doc = "МР"
 
-    def add_with_project(self, themes, liter, program, shedule):
-        return super().add_with_project(themes, liter, program, shedule)
+    def add_with_project(self, data_yaml: ProjectReader, shedule: ParseShedule):
+        super().add_with_project(data_yaml, shedule)
+        ai = AITester(data_yaml)
+        self.context.update(ai.build())
+        self.bar.next()

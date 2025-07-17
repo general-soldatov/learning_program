@@ -66,15 +66,15 @@ def project(path):
     if click.confirm(f"Do you really want to complile the project {path}"):
         click.echo("Create document: Work Plan")
         wp = WorkPlan(data_yaml.program, path_doc=data_yaml.paths.work_program, path=data_yaml.paths.folder)
-        wp.add_with_project(data_yaml.themes, data_yaml.literatures, data_yaml.program, shedule)
+        wp.add_with_project(data_yaml, shedule)
         click.echo(wp.create_document())
         click.echo("Create document: Appraisal Funds")
         af = AppraisalFunds(data_yaml.program, path_doc=data_yaml.paths.appraisal_funds, path=data_yaml.paths.folder)
-        af.add_with_project(data_yaml.program, shedule)
+        af.add_with_project(data_yaml, shedule)
         click.echo(af.create_document())
         click.echo("Create document: Metodical")
         mw = Metodical(data_yaml.program, path_doc=data_yaml.paths.metodical, path=data_yaml.paths.folder)
-        mw.add_with_project(data_yaml.themes, data_yaml.literatures, data_yaml.program, shedule)
+        mw.add_with_project(data_yaml, shedule)
         click.echo(mw.create_document())
     else:
         click.echo("Aborted!")
